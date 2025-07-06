@@ -1,4 +1,5 @@
 {
-  "message": "Welcome to the Flask API",
-  "version": "1.0"
+  "message": "Updated Flask API",
+  "version": "2.0",
+  "status": "active"
 }
