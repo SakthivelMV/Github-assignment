@@ -2,8 +2,38 @@
 <html>
 <head>
     <title>Flask Todo App</title>
+    <style>
+        form { margin: 20px; }
+        label { display: block; margin: 10px 0; }
+        input, textarea { width: 100%; padding: 8px; }
+        button { padding: 10px 20px; }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Todo App</h1>
+    <h1>Todo App</h1>
+    <form id="todoForm" onsubmit="submitTodo(event)">
+        <label for="itemId">Item ID:</label>
+        <input type="text" id="itemId" name="itemId" required>
+        <label for="itemName">Item Name:</label>
+        <input type="text" id="itemName" name="itemName" required>
+        <label for="itemDescription">Item Description:</label>
+        <textarea id="itemDescription" name="itemDescription" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        async function submitTodo(event) {
+            event.preventDefault();
+            const itemId = document.getElementById('itemId').value;
+            const itemName = document.getElementById('itemName').value;
+            const itemDescription = document.getElementById('itemDescription').value;
+            const response = await fetch('/submittodoitem', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ itemId, itemName, itemDescription })
+            });
+            const result = await response.json();
+            alert(result.message);
+        }
+    </script>
 </body>
 </html>
