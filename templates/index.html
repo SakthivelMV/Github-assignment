@@ -16,6 +16,8 @@
         <input type="text" id="itemId" name="itemId" required>
         <label for="itemUuid">Item UUID:</label>
         <input type="text" id="itemUuid" name="itemUuid" value="" readonly>
+        <label for="itemHash">Item Hash:</label>
+        <input type="text" id="itemHash" name="itemHash" value="" readonly>
         <label for="itemName">Item Name:</label>
         <input type="text" id="itemName" name="itemName" required>
         <label for="itemDescription">Item Description:</label>
@@ -29,17 +31,28 @@
                 return v.toString(16);
             });
         }
-        document.getElementById('itemUuid').value = generateUUID();
+        function generateHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash |= 0;
+            }
+            return hash.toString(16);
+        }
+        const itemUuid = generateUUID();
+        document.getElementById('itemUuid').value = itemUuid;
+        document.getElementById('itemHash').value = generateHash(itemUuid);
         async function submitTodo(event) {
             event.preventDefault();
             const itemId = document.getElementById('itemId').value;
             const itemUuid = document.getElementById('itemUuid').value;
+            const itemHash = document.getElementById('itemHash').value;
             const itemName = document.getElementById('itemName').value;
             const itemDescription = document.getElementById('itemDescription').value;
             const response = await fetch('/submittodoitem', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ itemId, itemUuid, itemName, itemDescription })
+                body: JSON.stringify({ itemId, itemUuid, itemHash, itemName, itemDescription })
             });
             const result = await response.json();
             alert(result.message);
